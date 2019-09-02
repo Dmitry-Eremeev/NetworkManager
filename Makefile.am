@@ -1232,6 +1232,7 @@ libnm_lib_h_pub_mkenums = \
 	libnm/nm-enum-types.h
 libnm_lib_h_priv = \
 	libnm/nm-libnm-utils.h \
+	libnm/nm-dbus-client.h \
 	libnm/nm-dbus-helpers.h \
 	libnm/nm-device-private.h \
 	libnm/nm-dhcp4-config.h \
@@ -1248,6 +1249,7 @@ libnm_lib_c_real = \
 	libnm/nm-active-connection.c \
 	libnm/nm-checkpoint.c \
 	libnm/nm-client.c \
+	libnm/nm-dbus-client.c \
 	libnm/nm-dbus-helpers.c \
 	libnm/nm-device-6lowpan.c \
 	libnm/nm-device-adsl.c \

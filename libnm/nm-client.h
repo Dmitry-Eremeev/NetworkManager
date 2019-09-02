@@ -221,9 +221,11 @@ typedef struct {
 
 GType nm_client_get_type (void);
 
+_NM_LIBNM_SYNC
 NMClient *nm_client_new (GCancellable  *cancellable,
                          GError       **error);
 
+_NM_LIBNM_ASYNC
 void      nm_client_new_async  (GCancellable         *cancellable,
                                 GAsyncReadyCallback   callback,
                                 gpointer              user_data);
@@ -291,6 +293,7 @@ NMClientPermissionResult nm_client_get_permission_result (NMClient *client,
 
 NMConnectivityState nm_client_get_connectivity          (NMClient *client);
 
+_NM_LIBNM_SYNC
 NMConnectivityState nm_client_check_connectivity        (NMClient *client,
                                                          GCancellable *cancellable,
                                                          GError **error);

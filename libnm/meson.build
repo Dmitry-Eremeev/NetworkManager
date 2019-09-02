@@ -77,6 +77,7 @@ libnm_sources = files(
   'nm-active-connection.c',
   'nm-checkpoint.c',
   'nm-client.c',
+  'nm-dbus-client.c',
   'nm-dbus-helpers.c',
   'nm-device-6lowpan.c',
   'nm-device-adsl.c',

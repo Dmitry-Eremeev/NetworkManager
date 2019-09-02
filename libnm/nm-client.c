@@ -20,6 +20,7 @@
 #include "nm-active-connection.h"
 #include "nm-vpn-connection.h"
 #include "nm-remote-connection.h"
+#include "nm-dbus-client.h"
 #include "nm-dbus-helpers.h"
 #include "nm-wimax-nsp.h"
 #include "nm-object-private.h"
@@ -96,6 +97,7 @@ typedef struct {
 
 typedef struct {
 	NMManager *manager;
+	NMDBusClient *dbus_client;
 	NMRemoteSettings *settings;
 	NMDnsManager *dns_manager;
 	GDBusObjectManager *object_manager;
@@ -168,9 +170,17 @@ NM_CACHED_QUARK_FCN ("nm-client-error-quark", nm_client_error_quark)
 
 /*****************************************************************************/
 
+static const NMDBusClientCallbackTable dbus_client_callback_table = {
+};
+
 static void
 nm_client_init (NMClient *client)
 {
+	NMClientPrivate *priv = NM_CLIENT_GET_PRIVATE (client);
+
+	priv->dbus_client = nm_dbus_client_new (g_bus_get_sync (_nm_dbus_bus_type (), NULL, NULL),
+	                                        &dbus_client_callback_table,
+	                                        client);
 }
 
 static gboolean
@@ -3407,6 +3417,8 @@ dispose (GObject *object)
 	NMClientPrivate *priv = NM_CLIENT_GET_PRIVATE (object);
 
 	nm_clear_g_cancellable (&priv->new_object_manager_cancellable);
+
+	nm_clear_pointer (&priv->dbus_client, nm_dbus_client_free);
 
 	if (priv->manager) {
 		g_signal_handlers_disconnect_by_data (priv->manager, object);
