@@ -89,6 +89,7 @@ content_files = \
 	$(top_builddir)/man/nm-settings.xml \
 	$(top_builddir)/man/nm-settings-keyfile.xml \
 	$(top_builddir)/man/nm-openvswitch.xml \
+	$(top_builddir)/man/nm-contrail.xml \
 	version.xml \
 	../../COPYING \
 	$(NULL)

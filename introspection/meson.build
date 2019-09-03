@@ -11,6 +11,7 @@ ifaces = [
   'org.freedesktop.NetworkManager.Device.Bluetooth',
   'org.freedesktop.NetworkManager.Device.Bond',
   'org.freedesktop.NetworkManager.Device.Bridge',
+  'org.freedesktop.NetworkManager.Device.ContrailVrouter',
   'org.freedesktop.NetworkManager.Device.Dummy',
   'org.freedesktop.NetworkManager.Device.Generic',
   'org.freedesktop.NetworkManager.Device.Infiniband',

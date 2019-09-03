@@ -45,6 +45,13 @@ if install_systemd_unit_dir
       install_dir: join_paths(systemd_system_unit_dir, 'NetworkManager.service.d')
     )
   endif
+
+  if enable_contrail
+    install_data(
+      'NetworkManager-contrail.conf',
+      install_dir: join_paths(systemd_system_unit_dir, 'NetworkManager.service.d')
+    )
+  endif
 endif
 
 if install_udev_dir

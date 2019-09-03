@@ -362,3 +362,4 @@
 #define DESCRIBE_DOC_NM_SETTING_WPAN_MAC_ADDRESS N_("If specified, this connection will only apply to the IEEE 802.15.4 (WPAN) MAC layer device whose permanent MAC address matches.")
 #define DESCRIBE_DOC_NM_SETTING_WPAN_PAN_ID N_("IEEE 802.15.4 Personal Area Network (PAN) identifier.")
 #define DESCRIBE_DOC_NM_SETTING_WPAN_SHORT_ADDRESS N_("Short IEEE 802.15.4 address to be used within a restricted environment.")
+#define DESCRIBE_DOC_NM_SETTING_CONTRAIL_VROUTER_PHYSDEV N_("Physical device name.")
