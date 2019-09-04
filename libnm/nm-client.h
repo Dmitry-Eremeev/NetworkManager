@@ -26,17 +26,28 @@ G_BEGIN_DECLS
 #define NM_CLIENT_STATE "state"
 #define NM_CLIENT_STARTUP "startup"
 #define NM_CLIENT_NM_RUNNING "nm-running"
+
+_NM_DEPRECATED_SYNC_WRITABLE_PROPERTY
 #define NM_CLIENT_NETWORKING_ENABLED "networking-enabled"
+
+_NM_DEPRECATED_SYNC_WRITABLE_PROPERTY
 #define NM_CLIENT_WIRELESS_ENABLED "wireless-enabled"
-#define NM_CLIENT_WIRELESS_HARDWARE_ENABLED "wireless-hardware-enabled"
+_NM_DEPRECATED_SYNC_WRITABLE_PROPERTY
 #define NM_CLIENT_WWAN_ENABLED "wwan-enabled"
-#define NM_CLIENT_WWAN_HARDWARE_ENABLED "wwan-hardware-enabled"
+_NM_DEPRECATED_SYNC_WRITABLE_PROPERTY
 #define NM_CLIENT_WIMAX_ENABLED "wimax-enabled"
+
+#define NM_CLIENT_WIRELESS_HARDWARE_ENABLED "wireless-hardware-enabled"
+#define NM_CLIENT_WWAN_HARDWARE_ENABLED "wwan-hardware-enabled"
 #define NM_CLIENT_WIMAX_HARDWARE_ENABLED "wimax-hardware-enabled"
+
 #define NM_CLIENT_ACTIVE_CONNECTIONS "active-connections"
 #define NM_CLIENT_CONNECTIVITY "connectivity"
 #define NM_CLIENT_CONNECTIVITY_CHECK_AVAILABLE "connectivity-check-available"
+
+_NM_DEPRECATED_SYNC_WRITABLE_PROPERTY
 #define NM_CLIENT_CONNECTIVITY_CHECK_ENABLED "connectivity-check-enabled"
+
 #define NM_CLIENT_PRIMARY_CONNECTION "primary-connection"
 #define NM_CLIENT_ACTIVATING_CONNECTION "activating-connection"
 #define NM_CLIENT_DEVICES "devices"
@@ -225,20 +236,31 @@ gboolean    nm_client_get_startup    (NMClient *client);
 gboolean    nm_client_get_nm_running (NMClient *client);
 
 gboolean nm_client_networking_get_enabled (NMClient *client);
+
+_NM_DEPRECATED_SYNC_METHOD
 gboolean nm_client_networking_set_enabled (NMClient *client,
                                            gboolean enabled,
                                            GError **error);
 
 gboolean nm_client_wireless_get_enabled (NMClient *client);
+
+_NM_DEPRECATED_SYNC_METHOD
 void     nm_client_wireless_set_enabled (NMClient *client, gboolean enabled);
+
 gboolean nm_client_wireless_hardware_get_enabled (NMClient *client);
 
 gboolean nm_client_wwan_get_enabled (NMClient *client);
+
+_NM_DEPRECATED_SYNC_METHOD
 void     nm_client_wwan_set_enabled (NMClient *client, gboolean enabled);
+
 gboolean nm_client_wwan_hardware_get_enabled (NMClient *client);
 
 gboolean nm_client_wimax_get_enabled (NMClient *client);
+
+_NM_DEPRECATED_SYNC_METHOD
 void     nm_client_wimax_set_enabled (NMClient *client, gboolean enabled);
+
 gboolean nm_client_wimax_hardware_get_enabled (NMClient *client);
 
 NM_AVAILABLE_IN_1_10
@@ -248,6 +270,7 @@ NM_AVAILABLE_IN_1_10
 gboolean nm_client_connectivity_check_get_enabled (NMClient *client);
 
 NM_AVAILABLE_IN_1_10
+_NM_DEPRECATED_SYNC_METHOD
 void     nm_client_connectivity_check_set_enabled (NMClient *client,
                                                    gboolean enabled);
 

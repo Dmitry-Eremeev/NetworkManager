@@ -215,4 +215,30 @@
 # define NM_AVAILABLE_IN_1_22
 #endif
 
+/* libnm's NMClient maintains a cache of NetworkManager's D-Bus interface.
+ * Issuing blocking calls from libnm API will only invoke the D-Bus method
+ * and return it's result, without updating the cache (of course, otherwise
+ * if it would emit signals and change the cache content while waiting, it
+ * wouldn't be very blocking).
+ *
+ * When a blocking call returns (from g_dbus_connection_call_sync()), the
+ * response is processed out of order from other events that populate the
+ * object cache. That is bad.
+ *
+ * Even worse, the cache is no longer up-to-date, when the blocking call
+ * returns. It will only get sync'ed when you iterate the main context again.
+ * At this point, why did you call the blocking method? It doesn't make sense.
+ *
+ * For that reason, blocking API is deprecated. They are odd to use. You cannot
+ * glue a synchronous API on top of D-Bus (which is inherrently asynchronous).
+ * At least not, if you also have other state (the object cache), that should stay
+ * in sync.
+ *
+ * These methods are effectively deprecated since 1.22. However, at this point
+ * we don't yet mark them as such, because it might just cause unnecessary compiler
+ * warnings. Let's first deprecate them for a long time, before we enable the
+ * compiler warning. */
+#define _NM_DEPRECATED_SYNC_METHOD            /*NM_DEPRECATED_IN_1_22*/
+#define _NM_DEPRECATED_SYNC_WRITABLE_PROPERTY /*NM_DEPRECATED_IN_1_22*/
+
 #endif  /* NM_VERSION_H */
