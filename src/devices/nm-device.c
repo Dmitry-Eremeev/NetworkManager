@@ -9330,7 +9330,9 @@ nm_device_get_configured_mtu_from_connection (NMDevice *self,
 }
 
 guint32
-nm_device_get_configured_mtu_for_wired (NMDevice *self, NMDeviceMtuSource *out_source)
+nm_device_get_configured_mtu_for_wired (NMDevice *self,
+                                        NMDeviceMtuSource *out_source,
+                                        gboolean *out_force)
 {
 	return nm_device_get_configured_mtu_from_connection (self,
 	                                                     NM_TYPE_SETTING_WIRED,
@@ -9339,21 +9341,38 @@ nm_device_get_configured_mtu_for_wired (NMDevice *self, NMDeviceMtuSource *out_s
 
 guint32
 nm_device_get_configured_mtu_wired_parent (NMDevice *self,
-                                           NMDeviceMtuSource *out_source)
+                                           NMDeviceMtuSource *out_source,
+                                           gboolean *out_force)
 {
 	guint32 mtu = 0;
+	guint32 parent_mtu = 0;
 	int ifindex;
 
-	mtu = nm_device_get_configured_mtu_for_wired (self, out_source);
+	ifindex = nm_device_parent_get_ifindex (self);
+	if (ifindex > 0) {
+		parent_mtu = nm_platform_link_get_mtu (nm_device_get_platform (self), ifindex);
+		if (parent_mtu > NM_DEVICE_GET_CLASS (self)->mtu_parent_delta)
+			parent_mtu -= NM_DEVICE_GET_CLASS (self)->mtu_parent_delta;
+	}
+
+	mtu = nm_device_get_configured_mtu_for_wired (self, out_source, out_force);
+
+	if (parent_mtu && mtu > parent_mtu) {
+		/* Trying to set a MTU that is out of range from configuration:
+		 * fall back to the parent MTU and set force flag so that it
+		 * overrides an MTU with higher priority already configured.
+		 */
+		 *out_source = NM_DEVICE_MTU_SOURCE_PARENT;
+		 *out_force = TRUE;
+		 return parent_mtu;
+	}
+
 	if (*out_source != NM_DEVICE_MTU_SOURCE_NONE)
 		return mtu;
 
 	/* Inherit the MTU from parent device, if any */
-	ifindex = nm_device_parent_get_ifindex (self);
-	if (ifindex > 0) {
-		mtu = nm_platform_link_get_mtu (nm_device_get_platform (self), ifindex);
-		if (mtu > NM_DEVICE_GET_CLASS (self)->mtu_parent_delta)
-			mtu -= NM_DEVICE_GET_CLASS (self)->mtu_parent_delta;
+	if (parent_mtu) {
+		mtu = parent_mtu;
 		*out_source = NM_DEVICE_MTU_SOURCE_PARENT;
 	}
 
@@ -9397,6 +9416,7 @@ _commit_mtu (NMDevice *self, const NMIP4Config *config)
 	int ifindex;
 	char sbuf[64], sbuf1[64], sbuf2[64];
 	gboolean success = TRUE;
+	gboolean force = FALSE;
 
 	ifindex = nm_device_get_ip_ifindex (self);
 	if (ifindex <= 0)
@@ -9426,12 +9446,18 @@ _commit_mtu (NMDevice *self, const NMIP4Config *config)
 		 * multiple times. An exception to this is for the PARENT
 		 * source, since we need to keep tracking the parent MTU when it
 		 * changes.
+		 *
+		 * The subclass can set the @force argument to TRUE to signal that the
+		 * returned MTU should be applied even if it has a lower priority. This
+		 * is useful when the value from a lower source should
+		 * preempt the one from higher ones.
 		 */
 
 		if (NM_DEVICE_GET_CLASS (self)->get_configured_mtu)
-			mtu = NM_DEVICE_GET_CLASS (self)->get_configured_mtu (self, &source);
+			mtu = NM_DEVICE_GET_CLASS (self)->get_configured_mtu (self, &source, &force);
 
 		if (   config
+		    && !force
 		    && source < NM_DEVICE_MTU_SOURCE_IP_CONFIG
 		    && nm_ip4_config_get_mtu (config)) {
 			mtu = nm_ip4_config_get_mtu (config);
@@ -9439,15 +9465,17 @@ _commit_mtu (NMDevice *self, const NMIP4Config *config)
 		}
 
 		if (mtu != 0) {
-			_LOGT (LOGD_DEVICE,
-			       "mtu: value %u from source '%s' (%u), current source '%s' (%u)",
+			_LOGE (LOGD_DEVICE,
+			       "mtu: value %u from source '%s' (%u), current source '%s' (%u)%s",
 			       (guint) mtu,
 			       mtu_source_to_str (source), (guint) source,
-			       mtu_source_to_str (priv->mtu_source), (guint) priv->mtu_source);
+			       mtu_source_to_str (priv->mtu_source), (guint) priv->mtu_source,
+			       force ? " (forced)" : "");
 		}
 
 		if (   mtu != 0
-		    && (   source > priv->mtu_source
+		    && (   force
+		        || source > priv->mtu_source
 		        || (priv->mtu_source == NM_DEVICE_MTU_SOURCE_PARENT && source == priv->mtu_source)))
 			mtu_desired = mtu;
 		else {
