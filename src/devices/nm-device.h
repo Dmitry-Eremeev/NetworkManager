@@ -226,6 +226,10 @@ typedef struct _NMDeviceClass {
 
 	const NMLinkType *link_types;
 
+	/* if the device MTU is set based on parent's one, this specifies
+	 * a difference needed, for example, for the encapsulation overhead */
+	guint16 mtu_parent_delta;
+
 	/* Whether the device type is a master-type. This depends purely on the
 	 * type (NMDeviceClass), not the actual device instance. */
 	bool is_master:1;
