@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # SPDX-License-Identifier: GPL-2.0+
-# coding=utf-8
 #
 # Copyright (C) 2013 Red Hat, Inc.
 #
