@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0+
 /*
- * Jiri Klimes <jklimes@redhat.com>
+ * Attributed-to: Jiri Klimes <jklimes@redhat.com>
  * Copyright 2010 - 2018 Red Hat, Inc.
  */
 

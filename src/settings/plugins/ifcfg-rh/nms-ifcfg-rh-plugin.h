@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0+
 /*
- * Dan Williams <dcbw@redhat.com>
- * Søren Sandmann <sandmann@daimi.au.dk>
+ * Attributed-to: Dan Williams <dcbw@redhat.com>
+ * Attributed-to: Søren Sandmann <sandmann@daimi.au.dk>
  * Copyright (C) 2007 - 2008 Red Hat, Inc.
  */
 

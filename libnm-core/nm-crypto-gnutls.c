@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1+
 /*
- * Dan Williams <dcbw@redhat.com>
+ * Attributed-to: Dan Williams <dcbw@redhat.com>
  * Copyright 2007 - 2015 Red Hat, Inc.
  */
 

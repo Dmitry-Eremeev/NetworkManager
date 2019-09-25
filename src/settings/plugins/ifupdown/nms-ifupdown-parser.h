@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0+
 /*
- * Alexander Sack <asac@ubuntu.com>
+ * Attributed-to: Alexander Sack <asac@ubuntu.com>
  * (C) Copyright 2008 Canonical Ltd.
  */
 

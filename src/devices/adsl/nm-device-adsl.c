@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0+
 /*
- * Pantelis Koukousoulas <pktoss@gmail.com>
+ * Attributed-to: Pantelis Koukousoulas <pktoss@gmail.com>
  */
 
 #include "nm-default.h"
