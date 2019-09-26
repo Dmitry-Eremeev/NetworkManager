@@ -3417,8 +3417,11 @@ device_realized (NMDevice *device, GParamSpec *pspec, NMSettings *self)
 	NMSettingsConnection *added;
 	GError *error = NULL;
 
-	if (!nm_device_is_real (device))
+	if (!nm_device_is_real (device)) {
+		_LOGT ("auto-default: cannot create auto-default connection for device %s: device is not realized",
+		       nm_device_get_iface (device));
 		return;
+	}
 
 	g_signal_handlers_disconnect_by_func (device,
 	                                      G_CALLBACK (device_realized),
@@ -3429,10 +3432,23 @@ device_realized (NMDevice *device, GParamSpec *pspec, NMSettings *self)
 	/* If the device isn't managed or it already has a default wired connection,
 	 * ignore it.
 	 */
-	if (   !NM_DEVICE_GET_CLASS (self)->new_default_connection
-	    || !nm_device_get_managed (device, FALSE)
-	    || g_object_get_qdata (G_OBJECT (device), _default_wired_connection_quark ()))
+	if (!NM_DEVICE_GET_CLASS (self)->new_default_connection) {
+		_LOGT ("auto-default: cannot create auto-default connection for device %s: device class does not implement new_default_connection()",
+		       nm_device_get_iface (device));
 		return;
+	}
+
+	if (!nm_device_get_managed (device, FALSE)) {
+		_LOGT ("auto-default: cannot create auto-default connection for device %s: device is not managed",
+		       nm_device_get_iface (device));
+		return;
+	}
+
+	if (g_object_get_qdata (G_OBJECT (device), _default_wired_connection_quark ())) {
+		_LOGT ("auto-default: cannot create auto-default connection for device %s: device has already a wired connection",
+		       nm_device_get_iface (device));
+		return;
+	}
 
 	if (nm_config_get_no_auto_default_for_device (priv->config, device)) {
 		_LOGT ("auto-default: cannot create auto-default connection for device %s: disabled by \"no-auto-default\"",
